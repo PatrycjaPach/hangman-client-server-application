@@ -8,6 +8,7 @@
 #include        <stdio.h>
 #include        <stdlib.h>
 #include        <string.h>
+#include "discovery_server.h"
 //#include <strings.h> jakby krzyczaolo na bzero
 
 #include <signal.h> //obsuga sigchild
@@ -66,6 +67,10 @@ int main(int argc, char **argv){
         if(listen(desc1, LISTEN)<0){
                 perror("listen: ");
                 return 1;
+        }
+        if (fork() == 0) { //tylko w procesie potomnym
+            multicast_discovery_server();   // multicast discovery
+            exit(0);              // nigdy nie wraca
         }
 
         //sigaction 
