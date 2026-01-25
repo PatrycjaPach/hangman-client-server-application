@@ -1,10 +1,10 @@
 kompilacja servera:
-gcc -o server serv.c discovery_server.c new_clients.c handle_client.c
+gcc -o server serv.c discovery_server.c new_clients.c handle_client.c tlv.c
 uruchomienie servera:
 ./server
 
 kompilacja klient:
-gcc -o klient cli.c discovery.c 
+gcc -o klient cli.c discovery.c tlv.c
 uruchomienie klienta:
 ./klient 
 
