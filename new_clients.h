@@ -24,17 +24,23 @@ int client_add(int fd);
 //usuwa klienta
 void client_remove(int fd);
 
-//Zwraca wskaźnik do klienta albo NULL 
+/* Zwraca wskaźnik do klienta albo NULL */
 struct client *client_get(int fd);
 
-//Sprawdza, czy login jest już zajęty
+/* ===== Logowanie ===== */
+
+/* Sprawdza, czy login jest już zajęty */
 int username_taken(const char *username);
-//Ustawia login klienta 
+
+/* Ustawia login klienta */
 int client_login(int fd, const char *username);
 
-//Wylogowuje klienta
+/* Wylogowuje klienta */
 void client_logout(int fd);
-//ustawia na ready
+
+/* ===== JOIN (bez gry) ===== */
+
+/* Ustawia flagę ready */
 int client_set_ready(int fd);
 
 #endif

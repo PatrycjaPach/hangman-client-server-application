@@ -7,6 +7,10 @@
 #include <unistd.h>
 #include <string.h>
 #include "discovery.h" //multicast
+#include "tlv.h"
+#include "protocol.h"
+
+
 
 int main(int argc, char **argv){
 	int desc, err_inet_pton;
@@ -64,20 +68,56 @@ int main(int argc, char **argv){
 	//echo z chata
 	while (1) {
 		// 1) weź dane od użytkownika
-		n = read(STDIN_FILENO, buf, sizeof(buf));
+		n = read(STDIN_FILENO, buf, sizeof(buf)-1); //o
 		if (n == 0) break; // EOF (Ctrl+D) -> koniec
-		if (n < 0) { perror("read stdin"); break; }
+		if (n < 0) { perror("read stdin"); break; }//o
+		buf[n] = '\0';//o
 
 		// 2) wyślij do serwera
-		if (write(desc, buf, n) < 0) { perror("write socket"); break; }
+		//if (write(desc, buf, n) < 0) { perror("write socket"); break; }
 
+		//zamiast write, w tlv:
+		if (strncmp(buf, "LOGIN ", 6) == 0) {
+			char *username = buf + 6;
+			username[strcspn(username, "\n")] = '\0';
+
+			sendtlv(desc, TLV_LOGIN, username, strlen(username));
+		}
+		else if (strncmp(buf, "JOIN", 4) == 0) {
+			sendtlv(desc, TLV_JOIN, NULL, 0);
+		}
+		else if (strncmp(buf, "GUESS ", 6) == 0) {
+			char letter = buf[6];
+			sendtlv(desc, TLV_GUESS, &letter, 1);
+		}
+		else {
+			printf("Unknown command\n");
+			continue;
+		}
 		// 3) odbierz echo z serwera
-		n = read(desc, buf, sizeof(buf));
-		if (n == 0) break; // serwer zamknął połączenie
-		if (n < 0) { perror("read socket"); break; }
+		//n = read(desc, buf, sizeof(buf));
+		//if (n == 0) break; // serwer zamknął połączenie
+		//if (n < 0) { perror("read socket"); break; } 
+
+		//zamaist read w tlv: (pełni podobne funkcje)
+		uint16_t type;
+		uint8_t rbuf[MAX_TLV_VALUE];
+
+		int rlen = recv_tlv(desc, &type, rbuf, sizeof(rbuf));
+		if (rlen <= 0) {
+			printf("Server disconnected\n");
+			break;
+		}
+
+		//zamiast 4)
+
+		//o
+		if (type == TLV_MSG) {
+			write(STDOUT_FILENO, rbuf, rlen);
+		}
 
 		// 4) wypisz na ekran
-		if (write(STDOUT_FILENO, buf, n) < 0) { perror("write stdout"); break; }
+		//if (write(STDOUT_FILENO, buf, n) < 0) { perror("write stdout"); break; }
 	}
 	//koniec echa z chata
 
