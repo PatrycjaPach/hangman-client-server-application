@@ -18,7 +18,7 @@ void handle_client_input(int desc2)
     uint8_t value[MAX_TLV_VALUE];
     //value to buf w tlv.c/.h, zapisuje bajty do tej tablicy recv_tlv
     int len = recv_tlv(desc2, &type, value, sizeof(value));
-    if (len <= 0) {
+    if (len < 0) {
         close(desc2);
         client_remove(desc2);
         return;

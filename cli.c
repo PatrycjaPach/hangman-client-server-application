@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <string.h>
 #include "discovery.h" //multicast
-#include "tlv.h"
+#include "tlv.h" //format tlv
 #include "protocol.h"
 
 
@@ -76,7 +76,7 @@ int main(int argc, char **argv){
 		// 2) wyślij do serwera
 		//if (write(desc, buf, n) < 0) { perror("write socket"); break; }
 
-		//zamiast write, w tlv:
+		//zamiast write, pod tlv:
 		if (strncmp(buf, "LOGIN ", 6) == 0) {
 			char *username = buf + 6;
 			username[strcspn(username, "\n")] = '\0';
@@ -99,7 +99,7 @@ int main(int argc, char **argv){
 		//if (n == 0) break; // serwer zamknął połączenie
 		//if (n < 0) { perror("read socket"); break; } 
 
-		//zamaist read w tlv: (pełni podobne funkcje)
+		//zamaist read pod tlv: (pełni podobne funkcje)
 		uint16_t type;
 		uint8_t rbuf[MAX_TLV_VALUE];
 
@@ -111,7 +111,7 @@ int main(int argc, char **argv){
 
 		//zamiast 4)
 
-		//o
+		
 		if (type == TLV_MSG) {
 			write(STDOUT_FILENO, rbuf, rlen);
 		}
