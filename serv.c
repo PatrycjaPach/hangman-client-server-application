@@ -18,6 +18,7 @@
 
 #include <ctype.h> //do liter i gry, zmiana wielkosci np
 #include <poll.h> //do poll - wspolbieznosc
+#include "game.h" //logika gry
 
 
 #define LISTEN 10 //kolejka dla listen
@@ -37,7 +38,9 @@ int main(int argc, char **argv)
 
 
         clients_init(); //funckja z new clients, czyszczenie tablicy klientow
+        game_init(); //z game.h, czyszczenie tablicy gry
 
+         //ignoruemy sigchild zeby nie robic zombie process
         //tworzenie gniazda IPv6 TCP
         if ((desc1 = socket(AF_INET6, SOCK_STREAM, 0)) < 0) {
                 perror("socket");
