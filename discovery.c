@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <errno.h>
 
-#define MCAST_ADDR "ff15::1234" //adres do grupy rozgloszeniowej
+#define MCAST_ADDR "ff02::1234" //adres do grupy rozgloszeniowej
 #define MCAST_PORT 5555 //numer portu do multicastu
 
 int discover_server(struct sockaddr_in6 *servaddr)
@@ -36,6 +36,8 @@ int discover_server(struct sockaddr_in6 *servaddr)
     //wysylanie jednego datagramu tylko, dla gniazda s-udp : ODKRYWANIE, bierze adres i port ze struktury
     sendto(s, "ODKRYWANIE", 10, 0,
            (struct sockaddr*)&mcast_addr, sizeof(mcast_addr));
+    printf("odkrywanie serwera przez multicast\n");
+    fflush(stdout);
 
    //odbieram jeden datagram, dane->bufora, zapisanie adresy nadawcy do struktury
     //potrzebujemy głownie adresu servera a nie samej wiadomosci
@@ -46,6 +48,9 @@ int discover_server(struct sockaddr_in6 *servaddr)
         close(s);  //gniazdo potrzebujemy jednorazowo, do znalezienia servera wiec zamykamy w kazdym przypadku
         return -1;
     }
+    printf("odebrano pakiet od servera przez multicast\n");
+    fflush(stdout);
+
     servaddr->sin6_port = htons(1234);
     close(s);
     return 0;

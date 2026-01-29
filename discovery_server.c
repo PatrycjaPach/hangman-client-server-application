@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <errno.h>
 
-#define MCAST_ADDR "ff15::1234" //ten sam adres co w kliencie (musi byc ta sama grupa)
+#define MCAST_ADDR "ff02::1234" //ten sam adres co w kliencie (musi byc ta sama grupa)
 #define MCAST_PORT 5555 //ten sam port co klient
 
 void multicast_discovery_server(void)
@@ -58,6 +58,8 @@ void multicast_discovery_server(void)
                             perror("recvfrom() error");
                             continue;
                          }
+        printf("odebrano pakiet od klienta przez multicast\n");
+        fflush(stdout);
 
         buf[n] = 0;
         //aby było kompatybilne z klientem:
