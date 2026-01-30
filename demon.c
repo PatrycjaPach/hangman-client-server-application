@@ -12,40 +12,39 @@ int daemon_init(const char *pname)
     pid_t pid;
     int i;
 
-    /* 1. fork */
+
     pid = fork();
-    if (pid < 0)
+    if (pid < 0) // fork error
         return -1;
-    if (pid > 0)
-        exit(0);   /* parent exits */
+    if (pid > 0) // rodzic dostaje PID dziecka
+        exit(0); // rodzic wychodzi demon odkleja się od procesu
 
-    /* 2. new session */
-    if (setsid() < 0)
-        return -1;
 
-    /* 3. ignore SIGHUP */
-    signal(SIGHUP, SIG_IGN);
+    if (setsid() < 0) // tworzenie nowej sesji
+        return -1; // błąd
 
-    /* 4. second fork */
+    signal(SIGHUP, SIG_IGN); // ignorowanie sygnału SIGHUP, bo po zamknięciu terminala może ubić proces
+
+    // drugi fork, żeby demon nie był liderem sesji i nie mógł odzyskać terminala
     pid = fork();
     if (pid < 0)
         return -1;
     if (pid > 0)
         exit(0);
 
-    /* 5. change working directory */
+    //zmiana katalogu roboczego na /
     chdir("/");
 
-    /* 6. close file descriptors */
+    //zamykanie wszystkich deskryptorów plików/
     for (i = 0; i < MAXFD; i++)
         close(i);
 
-    /* 7. redirect stdin/stdout/stderr */
-    open("/dev/null", O_RDONLY);
-    open("/dev/null", O_RDWR);
-    open("/dev/null", O_RDWR);
+    // przekierowanie stdin, stdout, stderr do /dev/null żeby nie był przypadkowo użyty przez socket
+    open("/dev/null", O_RDONLY); //stdin-czytanie
+    open("/dev/null", O_RDWR); //stdout-wypisanie na output
+    open("/dev/null", O_RDWR); //stderr-wypisanie błędów
 
-    /* 8. syslog */
+    // inicjalizacja sysloga bo demon przez niego wysyła komunikaty
     openlog(pname, LOG_PID | LOG_CONS, LOG_DAEMON);
 
     return 0;
