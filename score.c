@@ -1,5 +1,6 @@
 #include "score.h"
 #include "protocol.h"
+#include "tlv.h"
 #include <stdio.h>
 #include <string.h>
 #include <pthread.h>
