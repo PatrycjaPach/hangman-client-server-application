@@ -97,7 +97,7 @@ int start_game(int desc2){
         //wybór słowa
           int index = rand() % (sizeof(word_list) / sizeof(word_list[0]));
         const char *selected_word = word_list[index];
-        strncpy(games.word, selected_word,MAX_WORD_LEN- 1);  //kopiowanie slowa MAX_WORD_LEN ????????
+        strncpy(games.word, selected_word,MAX_WORD_LEN- 1);  //kopiowanie slowa MAX_WORD_LEN 
         games.word[MAX_WORD_LEN-1]='\0'; //dodanie na koncu null
 
         for(size_t i=0; i<strlen(games.word); i++){
