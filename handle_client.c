@@ -110,15 +110,18 @@ void handle_client_input(int desc2)
                 break;
             } 
             case TLV_SCORE: {
-                if (len == 5 && memcmp(value, "score", 5) == 0) {
-                    if (!c->logged_in) {
-                        sendtlv(desc2, TLV_MSG, "ERROR: not logged in\n", 22);
-                        break;
-                    }
-
-                    score_print_all(desc2);   // wysyła całą tabelę wyników
+                //sendtlv(desc2, TLV_MSG, "DEBUG: SCORE requested\n", 22); // debug
+                //score_print_all(desc2);
+                if (!c->logged_in) {
+                    sendtlv(desc2, TLV_MSG, "ERROR: not logged in\n", 22);
                     break;
                 }
+
+                start_game(desc2);
+
+                // login w grze 
+                game_set_login(desc2, c->username);
+
                 break;
             }
 

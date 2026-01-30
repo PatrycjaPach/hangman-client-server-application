@@ -22,6 +22,24 @@ struct game {
 
 static struct game games; //pojedyncza gra 
 
+static int other_player_fd(int fd) { //zwraca deskryptor drugiego gracza
+    if (fd == games.player1_fd) return games.player2_fd;
+    if (fd == games.player2_fd) return games.player1_fd;
+    return 0;
+}
+
+static void send_turn_info(void) { //wysyła informację o ruchu
+    char msg[64];
+    snprintf(msg, sizeof(msg), "Turn: fd=%d\n", games.turn_fd);
+    sendtlv(games.player1_fd, TLV_MSG, msg, (int)strlen(msg));
+    sendtlv(games.player2_fd, TLV_MSG, msg, (int)strlen(msg));
+}
+
+static void switch_turn(void) { //zmienia ruch na drugiego gracza
+    int other = other_player_fd(games.turn_fd);
+    if (other != 0) games.turn_fd = other;
+}
+
 //stan logiczny graczy
 static char g_p1_login[LOGIN_MAX] = {0}; 
 static char g_p2_login[LOGIN_MAX] = {0};   
@@ -86,6 +104,9 @@ int start_game(int desc2){
         games.wrong_guesse=0;
         games.active=1; //ustawienie ze gra trwa
 
+        games.turn_fd = games.player1_fd; //ustawienie ruchu na 1 gracza
+        send_turn_info(); //wyslanie info o ruchu
+
         games.wrong_count = 0;
         games.wrong_letters[0] = '\0';
 
@@ -131,6 +152,11 @@ void guess(int desc2, char letter){
     }
     if(desc2 != games.player1_fd && desc2 != games.player2_fd){
         sendtlv(desc2, TLV_MSG, "ERROR: you didnt start the game\n", 32);
+        return;
+    }
+
+    if(desc2 != games.turn_fd){ //sprawdzenie czy ruch jest tego gracza
+        sendtlv(desc2, TLV_MSG, "ERROR: not your turn\n", 21);
         return;
     }
 
@@ -196,6 +222,8 @@ void guess(int desc2, char letter){
         game_reset();
         return;
     }
+    switch_turn(); //zmiana ruchu
+    send_turn_info(); //wyslanie info o ruchu
 }
 
 int all_guessed(void){

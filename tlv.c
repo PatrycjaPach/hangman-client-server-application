@@ -60,6 +60,7 @@ int sendtlv(int desc2, uint16_t type, const void *data, uint16_t len){
     if(len>0&& writetlv(desc2, data, len)!= len){
         return -1;
     } //jesli sa dane i ich nie wysalno calych to blad, (join np nie ma danych wiec spoko)
+    return 0;
 }
 
 //odbieranie komunikaty - CAŁEGO. bufsize to max liczba bajtow, ktore mozemy zapisac- ograniczenie

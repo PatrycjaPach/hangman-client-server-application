@@ -7,10 +7,11 @@
 #include <errno.h>
 #include <unistd.h>
 #include <string.h>
-#include <sys/select.h>   // <-- ZMIANA: potrzebne do select()
+#include <sys/select.h>   // potrzebne do select()
 #include "discovery.h"    // multicast
 #include "tlv.h"          // format tlv
 #include "protocol.h"
+#include <signal.h> 
 
 int main(int argc, char **argv){
     int desc;
@@ -18,6 +19,7 @@ int main(int argc, char **argv){
     char buf[4096];
     ssize_t n;
 
+    signal(SIGPIPE, SIG_IGN);
     if ((desc = socket(AF_INET6, SOCK_STREAM, 0)) < 0) {
         perror("socket");
         return 1;
@@ -104,7 +106,7 @@ int main(int argc, char **argv){
                 sendtlv(desc, TLV_WRONG, NULL, 0);
             }
             else if (strncmp(buf, "SCORE", 5) == 0) {
-                sendtlv(desc, TLV_SCORE, NULL, 5);
+                sendtlv(desc, TLV_SCORE, "score"L, 5);
             }
             else {
                 printf("Unknown command\n");

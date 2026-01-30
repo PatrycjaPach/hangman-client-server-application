@@ -17,6 +17,7 @@ struct game {
     
     int wrong_count;          // liczba błędów
     char wrong_letters[32];   // tablica na błędy
+    int turn_fd;              // gniazdo gracza, który ma ruch
 
 };
 
