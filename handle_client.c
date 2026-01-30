@@ -80,6 +80,7 @@ void handle_client_input(int desc2)
             else{
                // sendtlv(desc2,TLV_MSG, "WAIT: joining...\n", 18);
                 start_game(desc2); //funkcja z game.c zaczynanie gry
+                game_set_login(desc2, c->username);
                 }
             break;
             }
@@ -117,10 +118,10 @@ void handle_client_input(int desc2)
                     break;
                 }
 
-                start_game(desc2);
-
+                //start_game(desc2);
+                score_print_all(desc2);
                 // login w grze 
-                game_set_login(desc2, c->username);
+                
 
                 break;
             }

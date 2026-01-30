@@ -106,7 +106,7 @@ int main(int argc, char **argv){
                 sendtlv(desc, TLV_WRONG, NULL, 0);
             }
             else if (strncmp(buf, "SCORE", 5) == 0) {
-                sendtlv(desc, TLV_SCORE, "score"L, 5);
+                sendtlv(desc, TLV_SCORE, NULL, 0);
             }
             else {
                 printf("Unknown command\n");

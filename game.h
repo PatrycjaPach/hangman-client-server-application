@@ -29,6 +29,8 @@ int start_game(int desc2);
 void guess(int desc2, char letter);
 int all_guessed(void);
 
+void game_set_login(int fd, const char *login);
+
 
 
 #endif
