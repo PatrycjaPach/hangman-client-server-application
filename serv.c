@@ -20,6 +20,7 @@
 #include <poll.h> //do poll - wspolbieznosc
 #include "game.h" //logika gry
 #include <netdb.h> //do getaddrinfo
+#include "demon.h" //do demonizacji
 
 #define LISTEN 10 //kolejka dla listen
 #define MAXEVENTS 2000 //max liczba deskryptorów w pollu
@@ -36,6 +37,11 @@ int main(int argc, char **argv)
         struct pollfd client[MAXEVENTS]; //tablica opisów deskryptorów dla poll
         int i, maxi, nready;
 
+        if (daemon_init("hangman_server") < 0) {
+                exit(1);
+        }
+
+        
 
         clients_init(); //funckja z new clients, czyszczenie tablicy klientow
         game_init(); //z game.h, czyszczenie tablicy gry

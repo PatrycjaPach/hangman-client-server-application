@@ -1,5 +1,5 @@
 kompilacja servera:
-gcc -o server serv.c discovery_server.c new_clients.c handle_client.c tlv.c game.c score.c
+gcc -o server serv.c discovery_server.c new_clients.c handle_client.c tlv.c game.c score.c demon.c
 uruchomienie servera:
 ./server
 
