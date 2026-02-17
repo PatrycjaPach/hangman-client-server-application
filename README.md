@@ -31,6 +31,7 @@ Clients do not manually enter the server IP address — the server is automatica
 
 ## 🔎 Server Discovery — Multicast
 
+The client discovers available servers using UDP multicast. A multicast discovery message is sent to a predefined multicast address and port, and the server listens on a dedicated socket for incoming discovery requests. When a request is received, the server responds with its connection details, allowing the client to automatically detect and connect without manual IP configuration.
 
 ---
 
