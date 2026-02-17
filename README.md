@@ -149,10 +149,15 @@ Each virtual machine or computer to communicate must be on the same network
 
 ### Antonia Zdziebko responsibilities
 • concurrent server handling using poll()
+
 • UDP multicast server discovery
+
 • new client handling – session initialization, flags and login assignment (new_clients.c/.h)
+
 • client handling logic – login validation and connection management (handle_client.c/.h)
+
 • core gameplay logic – letter guessing and word handling
+
 • TLV-based binary communication (tlv.c/.h)
 
 
